@@ -50,6 +50,27 @@ class CareTask:
         """Mark this task as complete."""
         self.status = "complete"
 
+    def next_occurrence(self) -> "CareTask":
+        """Return a fresh, pending copy of this task for its next day.
+
+        Recurring tasks should reappear once done rather than vanish: a
+        completed daily/weekly task rolls over into a new pending CareTask
+        for the following day. Non-recurring ("none") tasks do not repeat,
+        so this returns None for them.
+        """
+        if self.recurrence not in ("daily", "weekly"):
+            return None
+        return CareTask(
+            pet_name=self.pet_name,
+            name=self.name,
+            duration_mins=self.duration_mins,
+            priority=self.priority,
+            category=self.category,
+            is_mandatory=self.is_mandatory,
+            recurrence=self.recurrence,
+            recur_days=list(self.recur_days),
+        )
+
     def end_min(self):
         """Return the task's finish time (minutes since midnight), or None."""
         if self.start_min is None:
@@ -154,6 +175,21 @@ class PetCare:
     def tasks_by_recurrence(self, recurrence: str) -> list:
         """Return all tasks with the given recurrence ('none'/'daily'/'weekly')."""
         return [t for t in self.tasks if t.recurrence == recurrence]
+
+    # --- Completion / recurrence roll-over -------------------------------
+    def complete_task(self, task: "CareTask") -> "CareTask":
+        """Mark a task complete and, if it recurs, enqueue its next-day copy.
+
+        Marks ``task`` complete, then for a daily/weekly task adds a fresh
+        pending occurrence (via ``CareTask.next_occurrence``) to ``self.tasks``
+        so it shows up again the following day. Returns that new follow-up
+        task, or None for a one-off task.
+        """
+        task.mark_complete()
+        follow_up = task.next_occurrence()
+        if follow_up is not None:
+            self.tasks.append(follow_up)
+        return follow_up
 
     # --- Sorting ---------------------------------------------------------
     @staticmethod

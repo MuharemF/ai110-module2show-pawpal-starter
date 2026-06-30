@@ -39,7 +39,7 @@ At minimum, your system should:
 st.divider()
 
 st.subheader("Owner")
-owner_name = st.text_input("Owner name", value="Jordan")
+owner_name = st.text_input("Owner name", value="")
 
 # --- Persist the Owner across reruns -------------------------------------
 # Streamlit reruns this whole script on every interaction. Without this
@@ -66,7 +66,7 @@ st.divider()
 # --- Add a Pet -----------------------------------------------------------
 st.subheader("Add a Pet")
 with st.form("add_pet_form", clear_on_submit=True):
-    pet_name = st.text_input("Pet name", value="Mochi")
+    pet_name = st.text_input("Pet name", value="")
     species = st.selectbox("Species", ["dog", "cat", "other"])
     add_pet_submitted = st.form_submit_button("Add pet")
 
@@ -92,7 +92,7 @@ if not owner.pets:
 else:
     with st.form("add_task_form", clear_on_submit=True):
         pet_choice = st.selectbox("For which pet?", [p.name for p in owner.pets])
-        task_title = st.text_input("Task title", value="Morning walk")
+        task_title = st.text_input("Task title", value="")
         col1, col2 = st.columns(2)
         with col1:
             duration = st.number_input(
@@ -103,7 +103,7 @@ else:
         category = st.selectbox(
             "Category", ["exercise", "feeding", "grooming", "hygiene", "other"]
         )
-        recurrence = st.selectbox("Recurrence", ["none", "daily", "weekly"])
+        recurrence = st.selectbox("Recurrence", ["daily", "weekly"])
         is_mandatory = st.checkbox("Mandatory", value=False)
         add_task_submitted = st.form_submit_button("Add task")
 
