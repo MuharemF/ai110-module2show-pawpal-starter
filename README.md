@@ -85,16 +85,53 @@ Sample test output:
 # Paste your pytest output here
 ```
 
-## 📐 Smarter Scheduling
+## ✨ Features
 
-> Fill in once you've implemented scheduling logic.
+PawPal+ implements the following scheduling algorithms, all in `pawpal_systems.py`:
+
+- **Constraint-aware daily planning** — `PetCare.generate_daily_plan()` builds a
+  one-day plan that always includes every **mandatory** task (even if it blows the
+  time budget), then greedily fills the owner's remaining time with the most
+  important **optional** tasks.
+- **Priority & preference ranking** — optional tasks are ordered by a three-part
+  key: the owner's **preferred categories** first, then higher **priority**, then
+  shorter **duration** (so more tasks fit). Ties break deterministically.
+- **Time-budget filling** — a task is added only if it fits within
+  `max_time_minutes`; otherwise it is skipped and the reason is recorded.
+- **Automatic time assignment** — selected tasks are packed **back-to-back** from
+  the owner's `day_start_min`, giving each a concrete start/end (`08:00–08:30`).
+- **Sorting by time** — `PetCare.sort_by_time()` returns tasks in chronological
+  order, with any unscheduled tasks pushed to the end.
+- **Conflict detection** — `PetCare.find_conflicts()` flags any two scheduled
+  tasks whose `[start, end)` windows overlap (back-to-back tasks do **not**
+  conflict; identical start times **do**).
+- **Conflict warnings** — `PetCare.conflict_warning()` returns a human-readable
+  warning string (never raises), covering both time overlaps and the case where
+  mandatory tasks exceed the time budget.
+- **Daily & weekly recurrence** — tasks recur `daily` or `weekly`;
+  `CareTask.occurs_on(weekday)` decides whether a task runs on a given day, and
+  `generate_daily_plan(weekday=...)` filters the plan accordingly.
+- **Recurrence roll-over** — `PetCare.complete_task()` marks a task complete and,
+  for recurring tasks, enqueues a fresh pending occurrence for the following day
+  (via `CareTask.next_occurrence()`).
+- **Filtering** — tasks can be filtered by pet (`tasks_for_pet`), by status
+  (`tasks_by_status`), or by recurrence (`tasks_by_recurrence`).
+- **Plain-language explanations** — every plan returns an explanation string
+  describing why each task was included, skipped, or flagged.
+
+### Method reference
 
 | Feature | Method(s) | Notes |
 |---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+| Daily plan generation | `PetCare.generate_daily_plan(weekday=None)` | Mandatory-first, then greedy optional fill within the time budget |
+| Task ranking | `generate_daily_plan` (internal `rank`) | Preferred category → higher priority → shorter duration |
+| Sorting by time | `PetCare.sort_by_time(tasks)` | Chronological; unscheduled tasks sorted last |
+| Conflict detection | `PetCare.find_conflicts(tasks)` | Overlapping `[start, end)` windows; identical start times conflict |
+| Conflict warnings | `PetCare.conflict_warning(tasks=None)` | Returns a warning string, never raises; also flags mandatory-over-budget |
+| Recurrence check | `CareTask.occurs_on(weekday)` | `daily`/`none` always run; `weekly` runs on `recur_days` |
+| Recurrence roll-over | `PetCare.complete_task()`, `CareTask.next_occurrence()` | Completing a recurring task creates the next-day occurrence |
+| Filtering | `tasks_for_pet`, `tasks_by_status`, `tasks_by_recurrence` | Filter by pet, status, or recurrence |
+| Time formatting | `format_time(total_min)`, `CareTask.time_range()` | Minutes-since-midnight → `HH:MM`; wraps at 24h |
 
 ## 📸 Demo Walkthrough
 
@@ -107,3 +144,16 @@ Describe your app in numbered steps so a reader can follow along without watchin
 5. <!-- Add more steps as needed -->
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->
+ ## Testing PawPal+
+ python -m pytest Runs a my testPawPal file making sure that pet could have a name and a weekly schedule could be made with a given time constraint from the owner 
+ ## terminal output
+ platform win32 -- Python 3.13.5, pytest-9.1.1, pluggy-1.6.0
+rootdir: C:\programming\Git Rep\A110\project 2\ai110-module2show-pawpal-starter
+plugins: anyio-4.14.1
+collected 32 items                                                                                                                                                                                                      
+
+tests\test_pawpal.py ................................                                                                                                                                                             [100%]
+
+================================================================================================== 32 passed in 0.05s =================================================================================================
+## confidence level 
+3
