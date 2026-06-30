@@ -45,6 +45,21 @@ pip install -r requirements.txt
 ## 🖥️ Sample Output
 
 Paste a sample of your app's CLI or Streamlit output here so a reader can see what a generated plan looks like:
+=== Daily Plan ===
+- Rex: Morning walk (30 min)
+- Rex: Feed breakfast (10 min)
+- Whiskers: Feed breakfast (10 min)
+- Whiskers: Clean litter box (10 min)
+- Whiskers: Play with toy (20 min)
+
+=== Explanation ===
+Included 'Morning walk' for Rex (30 min) � mandatory.
+Included 'Feed breakfast' for Rex (10 min) � mandatory.
+Included 'Feed breakfast' for Whiskers (10 min) � mandatory.
+Included 'Clean litter box' for Whiskers (10 min) � mandatory.
+Included 'Play with toy' for Whiskers (20 min) � preferred category.
+Skipped 'Brush coat' for Rex (15 min) � not enough time remaining.
+Total scheduled time: 80 min across 5 task(s).
 
 ```
 # e.g.:
