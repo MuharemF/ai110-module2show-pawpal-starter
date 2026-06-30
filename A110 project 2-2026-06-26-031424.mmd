@@ -1,0 +1,29 @@
+classDiagram
+    direction TB
+    
+    class PetCareEngine {
+        +list tasks
+        +OwnerConstraints constraints
+        +__init__(tasks: list, constraints: OwnerConstraints)
+        +generate_daily_plan() Tuple~list, str~
+    }
+
+    class CareTask {
+        +str pet_name
+        +str name
+        +int duration_mins
+        +int priority
+        +str category
+        +bool is_mandatory
+        +__init__(pet_name: str, name: str, duration_mins: int, priority: int, category: str, is_mandatory: bool)
+    }
+
+    class OwnerConstraints {
+        +int max_time_minutes
+        +list preferred_categories
+        +__init__(max_time_minutes: int, preferred_categories: list)
+    }
+
+    %% Relationships
+    PetCareEngine "1" --> "*" CareTask : manages & schedules
+    PetCareEngine "1" --> "1" OwnerConstraints : respects filters of

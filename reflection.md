@@ -5,7 +5,11 @@
 **a. Initial design**
 
 - Briefly describe your initial UML design.
+my UML desgin will have a main class called "Petcare" and multiple other classes for each task that inharent the attributes of the "Petcare" class as well as a constrants class 
 - What classes did you include, and what responsibilities did you assign to each?
+Main class:  Petcare: holds a list of task, holds owner constraints,ownerName
+class: careTask: attributes:  petName,taskName, start, duration, priority, manditory.
+class: owner constrants: maxFreeTime, preferences 
 
 **b. Design changes**
 
@@ -19,7 +23,9 @@
 **a. Constraints and priorities**
 
 - What constraints does your scheduler consider (for example: time, priority, preferences)?
+time and prriority 
 - How did you decide which constraints mattered most?
+time and priorrity were the most important because if something takes more time but isnt that important it can be skipped for the owner and done at a another time
 
 **b. Tradeoffs**
 
